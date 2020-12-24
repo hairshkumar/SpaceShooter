@@ -1,0 +1,126 @@
+<html>
+<head>
+	<title>
+		space ship
+	</title>
+	<style type="text/css">
+			*{
+  	   	margin: 0px;
+  	   	padding:0px;
+  	   }
+       body
+       {
+        width:900px;
+        background-image: url("background1.png");
+        background-size: 100% 100%;
+       }
+       #gametitle
+       {
+       	width:600px; 
+      	position:relative;
+       	left:450px;
+       	top:200px; 
+       }
+       #gametitle h4
+       {
+       	color:#F62A00;
+       	text-align: center;
+       	font-size:32px;
+       	position: absolute;
+       	left:100px;
+       	letter-spacing:1px; 
+       	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, "AppleGothic", sans-serif;
+     text-transform: uppercase;
+     text-rendering: optimizeLegibility; 
+       }
+       #gametitle button
+       {
+       	width:150px;
+       	height:30px; 
+       	color:#2A3132;
+       	position:absolute;
+       	font-size:14px;
+       	border-radius: 8px;	 
+       	background-color:#1995AD; 
+       }
+       #gametitle button:hover
+       {
+       	color:#763626;
+       	background-color:#2A3132; 
+       }
+       #b1
+       {
+       	top:40px;
+       	left:90px;
+       }
+       #b2{
+       	top:40px;
+       	left:250px;
+       }
+       .icons{
+        width:50px;  
+       	height: 50px;	
+       	position: absolute;
+       	top:20px;
+       	background-image: url("player2.png");
+       	background-size:100% 100%; 
+       	}
+       #ha2
+       {
+         left:450px;
+       }
+    /* #anim
+     {
+     	position: relative;
+     } 
+         #a1{
+         	width:50px;
+         	height:30px;  
+       	position:absolute;
+       	background-image:url("aestroid1.png");
+       	background-size: 100% 100%; 
+       	top:10px;
+       	left:10px;
+       }
+       #a2{	
+           
+         	width:50px;
+         	height:30px;
+       	position:absolute;
+       	background-image:url("aestroid1.png");
+       	background-size: 100% 100%; 
+       	top:300px;
+       	left:200px;
+      }
+       #a3{
+             width:50px;
+         	height:30px;       	
+       		position:absolute;
+       	background-image:url("aestroid1.png");
+       	background-size: 100% 100%; 
+      top:400px;
+       	left:400px;
+       }*/
+	</style>
+</head>
+ <body >
+  <div id="gametitle">
+  	<h4>space invaders </h4>
+  	 <h5 class="icons" id="ha1"></h5>
+  	 <button id="b1" onclick="window.location.href='spaceship.html'">start game</button>
+  	 <button id="b2" onclick="exit()" >exit</button>
+  	 <h5 class="icons" id="ha2"></h5>
+  </div>
+  <div id="anim">
+  	 <h5 id="a1"></h5>
+  	 <h5 id="a2"></h5>
+  	 <h5 id="a3"></h5>
+  </div>
+ </body>
+ <script type="text/javascript">
+ function exit()
+      {
+        window.close();
+      }
+ </script>
+</html>

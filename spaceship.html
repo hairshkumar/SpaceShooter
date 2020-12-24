@@ -1,0 +1,380 @@
+<html>
+   <head>
+      <title> spaceship game by simple coder </title>
+      <style type = "text/css"> 
+*{
+   margin: 0px;
+   padding: 0px;
+}
+
+body {
+   width: 900px;
+   background-image: url("background1.png");
+   background-size: 100% 100%;
+}
+
+div {
+   width: 900px;
+   height: 500px;
+   position: relative;
+}
+
+#he4 {
+   width: 100px;
+   height: 30px;
+   background-image: url("18.png");
+   background-size: 100% 100%;
+   position: relative;
+   color: yellow;
+   top: 200px;
+   left: 20px;
+   font-size: 20px;
+}
+
+canvas {
+   margin-left: 300px;
+   border-bottom: 3px solid #1995AD;
+}
+
+#id1 {
+   height: 50px;
+}
+
+#id2 {
+   height: 50px;
+}
+
+#id1 h4 {
+   width: 40px;
+   height: 40px;
+   background-image: url("enemy1.png");
+   background-size: 100% 100%;
+   position: absolute;
+   top: 20px;
+   left: 450px;
+   color: white;
+}
+
+#id1 h5 {
+   width: 100px;
+   height: 30px;
+   background-image: url("18.png");
+   background-size: 100% 100%;
+   position: absolute;
+   color: white;
+   text-align: center;
+   top: 30px;
+   left: 500px;
+   font-size: 20px;
+}
+
+#id2 h4 {
+   width: 40px;
+   height: 40px;
+   background-image: url("player2.png");
+   background-size: 100% 100%;
+   position: absolute;
+   top: -25px;
+   left: 640px;
+   color: white;
+}
+
+#id2 h5 {
+   width: 100px;
+   height: 30px;
+   background-image: url("9.png");
+   background-size: 100% 100%;
+   position: absolute;
+   color: white;
+   left: 690px;
+   text-align: center;
+   top: -20px;
+   font-size: 20px;
+} 
+      </style>
+   </head>
+   <body>
+      <div id="padd">
+         <canvas id="canvas" width="700" height="500">
+         </canvas>
+         <div id ="id1">
+            <h4></h4>
+            <h5>score</h5>
+         </div>
+         <div id="id2">
+            <h4> </h4>
+            <h5>left</h5>
+         </div>
+      </div>
+      <script type = "text/javascript"> 
+canvas = document.getElementById("canvas");
+ctx = canvas.getContext("2d");
+height = canvas.height;
+width = canvas.width;
+gameover = 1;
+conuter = 0;
+conuter2 = 0;
+c3 = 0;
+score = 0;
+live = 3;
+pfire = 0;
+misslex = [], missley = [];
+enemy = ["enemy1.png", "enemy2.png", "enemy3.png", "enemy4.png"];
+player = {
+   x: 350,
+   y: 450,
+   hx: 50,
+   hy: 50
+};
+enmy = [];
+enmy[0] = {
+   x: Math.round(Math.random() * 650),
+   y: 0,
+   live: 1
+};
+misslex[0] = enmy[0].x;
+missley[0] = enmy[0].y;
+explo = [];
+explo[0] = {
+   x: player.x,
+   y: 450,
+   used: 1
+};
+s = {
+   x: Math.round(Math.random() * 650),
+   y: 0,
+   reach: 0
+};
+//image for player spaceship
+playerimg = new Image();
+playerimg.src = "player2.png";
+//image for eniemes
+eimg = new Image();
+eimg.src = enemy[0];
+//image explostion
+expl = new Image();
+expl.src = "spaceEffects_012.png";
+//image explostion 2
+expl2 = new Image();
+expl2.src = "damage.png";
+//image rocket
+rocket = new Image();
+rocket.src = "laserBlue01.png";
+rockete = new Image();
+rockete.src = "laserRed16.png";
+//image space stone
+stone = new Image();
+stone.src = "aestroid1.png";
+stoned = new Image();
+stoned.src = "damage.png";
+//audio 
+aud1 = new Audio("audio2.ogg");
+aud2 = new Audio("audio1.ogg");
+//control movement of spaceship
+window.addEventListener('keydown', function (event) {
+   switch (event.keyCode) {
+      case 37:
+         if (player.x >= 50 && gameover != 0) moveleft();
+         break;
+      case 38:
+         {
+            newx = player.x;
+            newy = 450;
+            var newfire = {
+               x: newx,
+               y: newy
+            };
+            explo.unshift(newfire);
+
+         }
+         break;
+      case 39:
+         if (player.x <= width - 50 && gameover != 0) moveright();
+         break;
+      case 13:
+         location.reload();
+         break;
+      case 83:
+         {
+            missley.pop();
+            misslex.pop();
+            if (gameover != 1) game = setInterval(init, 75);
+         }
+         break;
+   }
+}, false);
+window.addEventListener('keyup', function (event) {
+   if (event.keyCode == 38) pfire = 0;
+}, false);
+
+function movemissle() {
+   for (var i = 0; i < explo.length; i++) {
+      if (explo[i].y >= 10 && explo[i].used != 0) {
+         explo[i].y = explo[i].y - 10;
+         ctx.drawImage(rocket, explo[i].x + 15, explo[i].y, 10, 10);
+      } else {
+         ctx.drawImage(expl, explo[i].x, explo[i].y, 40, 40);
+         explo.pop();
+      }
+   }
+}
+
+function moveenemymissle() {
+   c3++;
+   for (var i = 0; i < misslex.length; i++) {
+      if (c3 == 15) {
+         var newmisslex = enmy[i].x;
+         var newmissley = enmy[i].y;
+         misslex.unshift(newmisslex);
+         missley.unshift(newmissley);
+         c3 = 0;
+      }
+      if (missley[i] <= height - 10) {
+         missley[i] = missley[i] + 10;
+         ctx.drawImage(rockete, misslex[i] + 15, missley[i], 10, 10);
+      } else {
+         misslex.pop();
+         missley.pop();
+      }
+   }
+}
+
+function attackplayer() {
+   for (var i = 0; i < misslex.length; i++) {
+      if (misslex[i] >= player.x - 20 && misslex[i] <= player.x + 40 && missley[i] >= 450 && missley[i] <= 490) {
+         ctx.drawImage(expl, player.x, player.y, 40, 40);
+         live--;
+         missley.pop();
+         misslex.pop();
+         if (live < 0) {
+            gameover = 0;
+            gamelost();
+            clearInterval(game);
+         }
+      }
+   }
+}
+
+function stop() {
+   if (gameover == 1) {
+      gameover = 0;
+      clearInterval(game);
+   } else {
+      gameover = 1;
+      game = setInterval(inti, 10);
+   }
+}
+
+function attackenieme() {
+   for (var i = 0; i < explo.length; i++) {
+      for (var j = 0; j < enmy.length; j++) {
+         if (explo[i].x >= enmy[j].x && explo[i].x <= enmy[j].x + 50 && explo[i].y >= enmy[j].y && explo[i].y <= enmy[j].y + 50) {
+            if (enmy[j].live != 0) {
+               aud1.play();
+               score++;
+               document.getElementsByTagName("h5")[0].innerHTML = "score " + score;
+               enmy[j].live = 0;
+               explo[i].used = 0;
+               ctx.drawImage(expl, enmy[j].x, enmy[j].y, 50, 50);
+            }
+         }
+      }
+   }
+}
+//not for use extra function
+function attackstone() {
+   for (var i = 0; i < explo.length; i++) {
+      if (explo[i].x >= s.x && explo[i].x <= s.x + 30 && explo[i].y >= s.y && explo[i].y <= s.y + 30 && s.reach == 0) {
+         s.reach = 1;
+         ctx.drawImage(expl, explo[i].x, explo[i].y, 30, 30);
+      }
+   }
+}
+
+//drawing player and stone and enemy 
+function draw() {
+   conuter2++;
+   document.getElementsByTagName("h5")[1].innerHTML = "left " + live;
+   ctx.drawImage(playerimg, player.x, player.y, 40, 40);
+   for (var j = 0; j < enmy.length; j++) {
+      if (enmy[j].live != 0) ctx.drawImage(eimg, enmy[j].x, enmy[j].y, 40, 40);
+   }
+   if (s.y <= height && s.reach != 1) {
+      ctx.drawImage(stone, s.x, s.y, 30, 30);
+      s.y = s.y + 5;
+   }
+}
+
+//create new enmyship if counter =200
+function createenemy() {
+   newx = Math.round(Math.random() * 650);
+   newy = 0;
+   newlive = 1;
+   var newenemy = {
+      x: newx,
+      y: newy,
+      live: newlive
+   };
+   var newmisslex = newenemy.x;
+   var newmissley = newenemy.y;
+   misslex.unshift(newmisslex);
+   missley.unshift(newmissley);
+   enmy.unshift(newenemy);
+}
+//movement
+function moveleft() {
+   if (player.x >= 0) {
+      player.x = player.x - 10;
+      ctx.drawImage(playerimg, player.x, player.y, 40, 40);
+   }
+}
+
+function moveright() {
+   if (player.x <= width + 60) {
+      player.x = player.x + 10;
+      ctx.drawImage(playerimg, player.x, player.y, 40, 40);
+   }
+}
+
+function moveenemy() {
+   for (var i = 0; i < enmy.length; i++) {
+      if (enmy[i].y <= height) {
+         enmy[i].y = enmy[i].y + 5;
+      } else {
+         enmy.pop();
+      }
+   }
+}
+
+function gamelost() {
+   ctx.font = "20px Arial";
+   ctx.fillStyle = "#4EB1BA";
+   ctx.fillRect(width / 2 - 110, height / 2 - 25, 300, 40);
+   ctx.fillStyle = "red";
+   ctx.fillText("alien reached earth(game over)", width / 2 - 100, height / 2);
+}
+
+function init() {
+   ctx.clearRect(0, 0, 700, 500);
+   conuter++;
+   draw();
+   attackplayer();
+   movemissle();
+   moveenemymissle();
+   moveenemy();
+   attackenieme();
+   if (conuter == 20) {
+      conuter = 0;
+      createenemy();
+   }
+   if (conuter2 == 100) {
+      conuter2 = 0;
+      s.x = Math.round(Math.random() * 500);
+      s.y = 0;
+      ctx.drawImage(stone, s.x, s.y, 30, 30);
+   }
+}
+game = setInterval(init, 75);  
+      </script> 
+   </body>
+</html>
